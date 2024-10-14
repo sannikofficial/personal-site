@@ -1,0 +1,31 @@
+name: Update Gist
+
+on:
+  push:
+    branches:
+      - main  # Ветка, на изменения в которой реагирует workflow
+    paths:
+      - main.css  # Файл, который нужно синхронизировать с Gist
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    env:
+      FILE_NAME: "main.css"  # Объявляем переменную для имени файла, чтобы использовать её везде ниже
+
+    steps:
+      - uses: actions/checkout@v3  # Шаг для клонирования репозитория
+
+      - name: Use variable in step
+        run: |
+          echo "We are using file: $FILE_NAME"  # Это покажет имя файла в логах
+
+      - name: Update Gist
+        run: |
+          GIST_ID="acc3625e6b059b7fd3f898949456d4bf"  # Задай ID своего Gist
+          echo "Updating Gist with file: $FILE_NAME"
+          curl \
+            -X PATCH \
+            -H "Authorization: token ${{ secrets.GIST_SECRET_TOKEN }}" \  # Здесь используется твой токен
+            -d "$(jq -n --arg content "$(cat $FILE_NAME)" '{"files": {"'$FILE_NAME'": {"content": $content}}}')" \
+            https://api.github.com/gists/$GIST_ID
