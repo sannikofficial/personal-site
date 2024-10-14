@@ -5,13 +5,13 @@ on:
     branches:
       - main  # Срабатывает при изменениях в ветке main
     paths:
-      - 987503925.css  # Отслеживаем изменения в конкретной папке
+      - posts/987503925.css  # Отслеживаем изменения в конкретной папке
 
 jobs:
   update-gist:
     runs-on: ubuntu-latest
     env:
-      FILE_NAME: "987503925.css"  # Путь к файлу в репозитории
+      FILE_NAME: "posts/987503925.css"  # Путь к файлу в репозитории
 
     steps:
       - uses: actions/checkout@v3
