@@ -27,5 +27,5 @@ jobs:
           curl \
             -X PATCH \
             -H "Authorization: token ${{ secrets.GIST_SECRET_TOKEN }}" \  # Используем токен из секретов
-            -d "$(jq -n --arg content "$(cat $FILE_NAME)" '{"files": {"main.css": {"content": $content}}}')" \  # Обновляем файл в Gist
+            -d "$(jq -n --arg content "$(cat $FILE_NAME)" '{"files": {"987503925.css": {"content": $content}}}')" \  # Важное изменение: имя файла в Gist — "987503925.css"
             https://api.github.com/gists/$GIST_ID
