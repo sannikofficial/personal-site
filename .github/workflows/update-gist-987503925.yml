@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Update Gist
         run: |
-          GIST_ID="acc3625e6b059b7fd3f898949456d4bf"
+          GIST_ID="7466013e1a8588e8a8e223ee2644d69f"
           curl \
             -X PATCH \
             -H "Authorization: token ${{ secrets.GIST_SECRET_TOKEN }}" \
