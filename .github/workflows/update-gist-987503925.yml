@@ -1,0 +1,25 @@
+name: Update Gist 987503925
+
+on:
+  push:
+    branches:
+      - main  # Срабатывает при изменениях в ветке main
+    paths:
+      - 987503925.css  # Отслеживаем изменения в конкретной папке
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    env:
+      FILE_NAME: "987503925.css"  # Путь к файлу в репозитории
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Gist
+        run: |
+          GIST_ID="acc3625e6b059b7fd3f898949456d4bf"
+          curl \
+            -X PATCH \
+            -H "Authorization: token ${{ secrets.GIST_SECRET_TOKEN }}" \
+            -d "$(jq -n --arg content "$(cat $FILE_NAME)" '{"files": {"main.css": {"content": $content}}}')" \
+            https://api.github.com/gists/$GIST_ID
