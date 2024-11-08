@@ -1,0 +1,214 @@
+{# twig vars #}
+{% set tagsElement %}
+	{% set arrtags =  getPostTerms(item.post_list.id, "post_tag", false, "", maximum_tags) %}      
+    <div class="ue_tags_terms">  {% for tag in arrtags %}<a href="{{tag.link}}" >{{tag.name|raw}}</a>{% endfor %} </div> 
+{% endset %}
+
+{% set postTextElement %}
+	<div class="uc_post_text">
+      {{item.post_list.intro_full|truncate(intro_number_of_characters)|raw}}
+	</div>
+	
+{% endset %}
+
+
+{% set metaDateElement %}
+  <div class="ue-meta-data">
+	<div class="ue_meta_counters">
+      	<span class="ue-grid-item-meta-rating_post-icon">[wpcode id="987508601"]</span>
+		<span class="ue-grid-item-meta-read_time-icon"><i class="fa-regular fa-clock"></i>[rt_reading_time postfix="минут" postfix_singular="минуты"]</span>
+      	<span class="ue-grid-item-meta-post_view-icon"><i class="fa-regular fa-eye"></i>[wpcode id="987508656"]</span>
+      	<span class="ue-grid-item-meta-comment_post-icon"><i class="fa-regular fa-comment"></i>[wpcode id="987508582"]</span>
+	</div>
+    
+    {% if show_date == "true" %}<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{date_icon_html|raw}}</span> {{text_before_date|raw}} {{item.post_list.date|ucdate(date_format)|raw}}</div>{% endif %}
+    {% if show_date_modified == "true" %}<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{date_modified_icon_html|raw}}</span> {{text_before_date_modified|raw}} {{item.post_list.date_modified|ucdate(date_format_modified)|raw}}</div>{% endif %}
+    {% if show_time == "true" %}<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{time_icon_html|raw}}</span> {{text_before_time|raw}} {% if time_format == "12hours" %}{{item.post_list.date|ucdate("g:i a")|raw}}{% endif %}{% if time_format == "24hours" %}{{item.post_list.date|ucdate("H:i")|raw}}{% endif %}</div>{% endif %}
+    {% if show_time_ago == "true" %}<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{time_ago_icon_html|raw}}</span>{{text_before_time_ago|raw}} {{item.post_list.date|ucdate("time_ago")|raw}}</div>{% endif %}
+	{% if show_post_views == "true" %}
+      {# this function require "wordpress popular posts" plugin. #}
+      {% set post_views = ucfunc("wpp_get_page_views", item.post_list.id) %} 
+    	<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{post_views_icon_html|raw}}</span>{{text_before_post_views|raw}} {{post_views}}</div>
+    {% endif %}
+    
+    {% if show_author == "true" %}
+      <div class="ue-grid-item-meta-data">
+        {% if author_element == "icon" %}<span class="ue-grid-item-meta-data-icon">{{author_icon_html|raw}}</span>{% endif %}
+        {% if author_element == "avatar" %}<span class="ue-grid-item-meta-data-avatar">{% set author2 = getPostAuthor(item.post_list.author_id,true,true) %}<img src="{{author2.avatar_url|raw}}"></span>{% endif %}
+        {{text_before_author|raw}} {% set author = getPostAuthor(item.post_list.author_id) %} <a href="{{author.url_posts}}">{{author.name}} </a>
+      </div>
+    {% endif %}            
+        
+	{% if show_comments == "true" %}<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{comments_icon_html|raw}}</span> {{text_before_comments|raw}}  {% set num_comments = ucfunc("get_num_comments", item.post_list.id) %} {{num_comments}} </div>{% endif %}
+
+    {% if show_custom_meta_one == "true" %}
+      {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id,custom_meta_name_one)%} 
+          		
+      {%if(meta_field_one_convert == "date")%}
+        {% set custom_field_value = custom_field_value|ucdate(meta_one_date_dest,meta_one_date_source) %}
+      {% endif %}
+				
+	  {% if(custom_field_value is not empty or custom_meta_icon_hide == "false") %}
+		<div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{custom_meta_icon_one_html|raw}}</span> {{custom_meta_text_before_one|raw}} {{custom_field_value|raw}}</div>
+      {% endif %}				
+    {% endif %}
+            
+    {% if show_custom_meta_two == "true" %}
+      {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id,custom_meta_name_two)%} 
+          		
+      {%if(meta_field_two_convert == "date")%}
+        {% set custom_field_value = custom_field_value|ucdate(meta_two_date_dest,meta_two_date_source) %}
+      {% endif %}
+				
+      {% if(custom_field_value is not empty or custom_meta_icon_hide == "false") %}
+        <div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{custom_meta_icon_two_html|raw}}</span> {{custom_meta_text_before_two|raw}} {{custom_field_value|raw}}</div>
+      {% endif %}            	
+    {% endif %}
+            
+    {% if show_custom_meta_three == "true" %}
+      {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id,custom_meta_name_three)%} 
+            
+      {% if(custom_field_value is not empty or custom_meta_icon_hide == "false") %}
+        <div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{custom_meta_icon_three_html|raw}}</span> {{custom_meta_text_before_three|raw}} {{custom_field_value|raw}}</div>
+      {% endif %}            
+    {% endif %}
+            
+    {% if show_custom_meta_four == "true" %}
+      {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id,custom_meta_name_four)%} 
+            
+      {% if(custom_field_value is not empty or custom_meta_icon_hide == "false") %}
+        <div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{custom_meta_icon_four_html|raw}}</span> {{custom_meta_text_before_four|raw}} {{custom_field_value|raw}}</div>
+      {% endif %}            
+    {% endif %}
+            
+    {% if show_custom_meta_five == "true" %}
+      {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id,custom_meta_name_five)%} 
+            	
+      {% if(custom_field_value is not empty or custom_meta_icon_hide == "false") %}
+        <div class="ue-grid-item-meta-data"><span class="ue-grid-item-meta-data-icon">{{custom_meta_icon_five_html|raw}}</span> {{custom_meta_text_before_five|raw}} {{custom_field_value|raw}}</div>
+      {% endif %}
+            
+    {% endif %}
+			
+    {% if debug_meta_fields == "true" %}<div class="ue-debug-meta">{{ucfunc("put_post_meta_debug",item.post_list.id)}}</div>{% endif %}  
+            
+  </div>	
+{% endset %}
+
+{% set textCustomField %}
+  {% set customFieldValue = ucfunc("get_post_custom_field", item.post_list.id, text_custom_field)%} 
+  <div class="uc_post_text_custom_field">{{customFieldValue|truncate(text_custom_field_charnum)|raw}}</div>
+{% endset %}
+{# end twig vars #}{##}
+
+<div id="{{item.item_id}}" class="uc_post_grid_style_one_item ue_post_grid_item ue-item {{hover_animation}}">
+  
+  {% if show_image == "true" %}
+    <a class="uc_post_grid_style_one_image {{item.post_list.dynamic_popup_link_class__image}}" {{item.post_list.dynamic_popup_link_attributes__image|raw}} target="{{open_links_in_new_tab}}">
+     <div class="uc_post_image">
+       <img src="{% if item.post_list.image is empty %}{{fallback_image}}{% else %}{{item.post_list.image}}{% endif %}" {{item.post_list.image_attributes|raw}}>
+
+       <div class="uc_category_overlay">
+        <span>[wpcode id="987508522"]</span>
+       </div>
+       
+       <div class="uc_date_overlay">
+        <span class="ue-grid-item-meta-date-icon"><i class="fa-solid fa-calendar-days"></i></span>
+        <span>[wpcode id="987508468"]</span>
+       </div>
+       
+       <div class="uc_author_overlay">
+        <span class="ue-grid-item-meta-author-icon"><i class="fa-solid fa-at"></i></span>
+        <span>[wpcode id="987508469"]</span>
+       </div>      
+       
+       <div class="uc_post_image_overlay"></div>
+     </div>
+    </a>
+  {% endif %}
+ 
+  <div class="uc_content">
+    <div class="uc_content_inner">
+      <div class="uc_content-info-wrapper" >
+        
+       {% if show_category == "cat" or show_category == "bytax" or show_category == "lastlevel" %}
+          
+        	{% if show_category == "cat" %}
+        		{% set arrcats = item.post_list.categories %}
+      		{% elseif show_category == "lastlevel" %}
+        		{% set arrcats =  getPostTerms(item.post_list.id, cat_tax, false,"last_level",cat_maxterms) %}  
+        	{% else %}
+        		{% set arrcats =  getPostTerms(item.post_list.id, cat_tax, false, "", cat_maxterms) %}        		
+			{% endif %}
+        
+        	<div class="ue-grid-item-category">
+              {% for cat in arrcats %}
+              	{% if disable_link_in_categories == "true" %}
+              		<a href="javascript:void(0);" class="{{item.post_list.category_slug}}">{{cat.name|raw}}</a>
+              	{% else %}
+              		<a href="{{cat.link}}" class="{{item.post_list.category_slug}}">{{cat.name|raw}}</a>
+              	{% endif %}
+              {% endfor %}
+        	</div>{# end ue-grid-item-category #}{##}
+        
+      {% elseif show_category == "main" %}
+        
+        	<div class="ue-grid-item-category">              
+              {% if disable_link_in_categories == "true" %}
+              	<a href="javascript:void(0);">{{item.post_list.category_name|raw}}</a>
+              {% else %}
+             	<a href="{{item.post_list.category_link}}">{{item.post_list.category_name|raw}}</a>
+              {% endif %}              
+        	</div>
+        	
+      {% endif %}
+
+      {% if (show_tags == "true") and (tags_position == "above_title") %}{{tagsElement}}{% endif %}
+      {% if (meta_data_position == "before_title") %}{{metaDateElement}}{% endif %}  
+
+        
+        
+        {% if show_title == "true" %}
+      			<div class="uc_post_title"><a class="{{item.post_list.dynamic_popup_link_class__title}}" {{item.post_list.dynamic_popup_link_attributes__title|raw}} target="{{open_links_in_new_tab}}"><{{title_html_tag}} class="ue_p_title">{{item.post_list.title|raw}}</{{title_html_tag}}></a></div>
+      {% endif %}	
+                      
+      {% if (show_tags == "true") and (tags_position == "below_title") %}{{tagsElement}}{% endif %} 
+      {% if (meta_data_position == "before_text") %}{{metaDateElement}}{% endif %}
+      {% if (show_text == "true")%}{{postTextElement}}{% endif %}     
+      {% if (show_text_custom_field) == "true" %}{{textCustomField}}{% endif %}           
+      {% if (show_tags == "true") and (tags_position == "below_add_info") %}{{tagsElement}}{% endif %}                      
+      {% if (meta_data_position == "after_text") %}{{metaDateElement}}{% endif %}
+      {% if (show_tags == "true") and (tags_position == "above_btns") %}{{tagsElement}}{% endif %}
+                      
+     </div>{# end uc_content-info-wrapper #}{##}
+                      
+     {% if show_button == "true" %}
+      <div class="uc_post_button">
+        
+        <a class="uc_more_btn {{item.post_list.dynamic_popup_link_class}}" target="{{open_links_in_new_tab}}" {{item.post_list.dynamic_popup_link_attributes|raw}}>
+          <div class="uc_btn_inner">
+            <div class="uc_btn_txt">{{button_text}}</div>
+            {% if show_button_icon == "true" %}<div class="uc_btn_icon">{{button_icon_html|raw}}</div>{% endif %}
+          </div>
+      	</a>
+        
+        {% if show_second_button == "true" %}        
+          {% set custom_field_value = ucfunc("get_post_custom_field", item.post_list.id, link_from_custom_field)%} 
+        
+          <a class="uc_more_btn-custom-field" href="{{custom_field_value}}" target="{{open_links_in_new_tab}}">
+            <div class="uc_btn_inner">
+              <div class="uc_btn_txt">{{second_button_text|raw}}</div>
+              {% if show_second_button_icon == "true" %}<div class="uc_btn_icon">{{second_button_icon_html|raw}}</div>{% endif %}
+            </div>
+          </a>        
+        {% endif %}
+        
+      </div>{# end uc_post_button #}{##}
+     {% endif %}
+                      
+ 	</div>{# end uc_content_inner #}{##}
+  </div>{# end uc_content #}{##}
+      
+  {% if link_full_post == "true" %}<a class="ue_post_full_link {{item.post_list.dynamic_popup_link_class__title}}" {{item.post_list.dynamic_popup_link_attributes__title|raw}} target="{{open_links_in_new_tab}}"></a>{% endif %}
+      
+</div>{# end ue_post_grid_item #}{##}
